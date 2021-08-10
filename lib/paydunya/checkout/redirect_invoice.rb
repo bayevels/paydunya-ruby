@@ -2,7 +2,7 @@ module Paydunya
   module Checkout
     class Invoice < Paydunya::Checkout::Core
       attr_accessor :items, :total_amount, :taxes, :description, :currency, :store, :customer, :custom_data,
-                    :cancel_url, :return_url, :callback_url, :invoice_url, :receipt_url
+                    :cancel_url, :return_url, :callback_url, :invoice_url, :receipt_url, :token
 
       def initialize
         super
@@ -17,6 +17,7 @@ module Paydunya
         @return_url = @store.return_url
         @cancel_url = @store.cancel_url
         @callback_url = @store.callback_url
+        @token = ''
       end
 
       # Adds invoice items to the @items hash, the idea is to allow this function to be used in a loop
@@ -149,6 +150,7 @@ module Paydunya
         @response_code = result['response_code']
         @status = result['response_code'] == '00' ? Paydunya::SUCCESS : Paydunya::FAIL
         @invoice_url = result['response_code'] == '00' ? (result['invoice_token'] || result['response_text']) : nil
+        @token = result['token']
         result['response_code'] == '00'
       end
     end
